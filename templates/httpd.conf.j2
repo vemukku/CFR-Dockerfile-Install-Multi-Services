@@ -1,0 +1,46 @@
+Listen 8080
+
+ServerRoot "/etc/httpd" 
+
+LoadModule php7_module modules/libphp7.so
+LoadModule headers_module modules/mod_headers.so
+LoadModule rewrite_module modules/mod_rewrite.so
+LoadModule dir_module modules/mod_dir.so
+LoadModule alias_module modules/mod_alias.so
+
+<IfModule dir_module>
+    DirectoryIndex index.php index.html
+</IfModule>
+
+
+<FilesMatch \.php$>
+    SetHandler application/x-httpd-php-source
+</FilesMatch>
+
+
+<FilesMatch ".(eot|ttf|otf|woff|woff2)">
+  Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
+
+<VirtualHost *:8080>
+    ServerName info.php
+    DocumentRoot /var/www/apachedomain
+	RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ Error! Hyperlink reference not valid.} [NE,L,R=301]
+    <Directory /var/www/apachedomain/info.php>
+        Order Allow,Deny
+        Allow from all
+        AllowOverride All
+        Header set Access-Control-Allow-Origin "*"
+    </Directory>
+     <LocationMatch "/protected/.*">
+        AuthType basic
+        AuthName "Login Required"
+        AuthUserFile /full/path/to/passwords
+        Require valid-user
+        Order allow,deny
+        Allow from all
+    </LocationMatch>
+</VirtualHost>
