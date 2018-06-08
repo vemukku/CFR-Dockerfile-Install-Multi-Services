@@ -17,8 +17,8 @@ RUN yum -y update && yum -y install \
     nginx \
     httpd \
     php7 \	
-	git \
-	memcached \ OR php-memcached
+    git \
+    memcached \ 
  && yum clean all
  
 # Install Remi Collet's repo for CentOS 7
