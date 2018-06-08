@@ -8,10 +8,18 @@ LoadModule rewrite_module modules/mod_rewrite.so
 LoadModule dir_module modules/mod_dir.so
 LoadModule alias_module modules/mod_alias.so
 
+AddType application/x-httpd-php7 .php7
+
+AddModule mod_php7.c
+
 <IfModule dir_module>
     DirectoryIndex index.php index.html
 </IfModule>
 
+<IfModule mod_php7.c>
+    AddType application/x-httpd-php .php .php7 
+    AddType application/x-httpd-php-source .phps
+</IfModule>
 
 <FilesMatch \.php$>
     SetHandler application/x-httpd-php-source
@@ -19,28 +27,28 @@ LoadModule alias_module modules/mod_alias.so
 
 
 <FilesMatch ".(eot|ttf|otf|woff|woff2)">
-  Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Origin "*"
 </FilesMatch>
 
 <VirtualHost *:8080>
-    ServerName info.php
-    DocumentRoot /var/www/apachedomain
-	RewriteEngine On
+    ServerName apachedomain.com
+    DocumentRoot /var/www/apachedomain.com
+    RewriteEngine On
     RewriteCond %{HTTPS} off
     RewriteCond %{HTTP:X-Forwarded-Proto} !https
-  RewriteRule ^(.*)$ Error! Hyperlink reference not valid.} [NE,L,R=301]
-    <Directory /var/www/apachedomain/info.php>
+    RewriteRule ^(.*)$ Error! Hyperlink reference not valid.} [NE,L,R=301]
+    <Directory /var/www/apachedomain/test.php>
         Order Allow,Deny
         Allow from all
         AllowOverride All
         Header set Access-Control-Allow-Origin "*"
     </Directory>
      <LocationMatch "/protected/.*">
-        AuthType basic
-        AuthName "Login Required"
-        AuthUserFile /full/path/to/passwords
-        Require valid-user
-        Order allow,deny
-        Allow from all
-    </LocationMatch>
+         AuthType basic
+         AuthName "Login Required"
+         AuthUserFile /full/path/to/passwords
+         Require valid-user
+         Order allow,deny
+         Allow from all
+     </LocationMatch>
 </VirtualHost>
